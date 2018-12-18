@@ -1,32 +1,18 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.example.android.sunshine.utilities;
+
+package com.example.android.weatho.utilities;
 
 import android.content.Context;
 import android.text.format.DateUtils;
 
-import com.example.android.sunshine.R;
+import com.example.android.weatho.R;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 /**
- * Class for handling date conversions that are useful for Sunshine.
+ * Class for handling date conversions that are useful for Weatho.
  */
-public final class SunshineDateUtils {
+public final class WeathoDateUtils {
 
     public static final long SECOND_IN_MILLIS = 1000;
     public static final long MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60;
@@ -36,29 +22,11 @@ public final class SunshineDateUtils {
     /**
      * This method returns the number of days since the epoch (January 01, 1970, 12:00 Midnight UTC)
      * in UTC time from the current date.
-     *
-     * @param date A date in milliseconds in local time.
-     *
-     * @return The number of days in UTC time from the epoch.
      */
     public static long getDayNumber(long date) {
         TimeZone tz = TimeZone.getDefault();
         long gmtOffset = tz.getOffset(date);
         return (date + gmtOffset) / DAY_IN_MILLIS;
-    }
-
-    /**
-     * To make it easy to query for the exact date, we normalize all dates that go into
-     * the database to the start of the day in UTC time.
-     *
-     * @param date The UTC date to normalize
-     *
-     * @return The UTC date at 12 midnight
-     */
-    public static long normalizeDate(long date) {
-        // Normalize the start date to the beginning of the (UTC) day in local time
-        long retValNew = date / DAY_IN_MILLIS * DAY_IN_MILLIS;
-        return retValNew;
     }
 
     /**
@@ -88,24 +56,6 @@ public final class SunshineDateUtils {
         return localDate + gmtOffset;
     }
 
-    /**
-     * Helper method to convert the database representation of the date into something to display
-     * to users.  As classy and polished a user experience as "20140102" is, we can do better.
-     * <p/>
-     * The day string for forecast uses the following logic:
-     * For today: "Today, June 8"
-     * For tomorrow:  "Tomorrow"
-     * For the next 5 days: "Wednesday" (just the day name)
-     * For all days after that: "Mon, Jun 8" (Mon, 8 Jun in UK, for example)
-     *
-     * @param context      Context to use for resource localization
-     * @param dateInMillis The date in milliseconds (UTC)
-     * @param showFullDate Used to show a fuller-version of the date, which always contains either
-     *                     the day of the week, today, or tomorrow, in addition to the date.
-     *
-     * @return A user-friendly representation of the date such as "Today, June 8", "Tomorrow",
-     * or "Friday"
-     */
     public static String getFriendlyDateString(Context context, long dateInMillis, boolean showFullDate) {
 
         long localDate = getLocalDateFromUTC(dateInMillis);
@@ -120,16 +70,7 @@ public final class SunshineDateUtils {
             String dayName = getDayName(context, localDate);
             String readableDate = getReadableDateString(context, localDate);
             if (dayNumber - currentDayNumber < 2) {
-                /*
-                 * Since there is no localized format that returns "Today" or "Tomorrow" in the API
-                 * levels we have to support, we take the name of the day (from SimpleDateFormat)
-                 * and use it to replace the date from DateUtils. This isn't guaranteed to work,
-                 * but our testing so far has been conclusively positive.
-                 *
-                 * For information on a simpler API to use (on API > 18), please check out the
-                 * documentation on DateFormat#getBestDateTimePattern(Locale, String)
-                 * https://developer.android.com/reference/android/text/format/DateFormat.html#getBestDateTimePattern
-                 */
+                
                 String localizedDayName = new SimpleDateFormat("EEEE").format(localDate);
                 return readableDate.replace(localizedDayName, dayName);
             } else {
@@ -165,15 +106,6 @@ public final class SunshineDateUtils {
         return DateUtils.formatDateTime(context, timeInMillis, flags);
     }
 
-    /**
-     * Given a day, returns just the name to use for that day.
-     *   E.g "today", "tomorrow", "Wednesday".
-     *
-     * @param context      Context to use for resource localization
-     * @param dateInMillis The date in milliseconds (local time)
-     *
-     * @return the string day of the week
-     */
     private static String getDayName(Context context, long dateInMillis) {
         /*
          * If the date is today, return the localized version of "Today" instead of the actual
