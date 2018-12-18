@@ -1,19 +1,5 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.example.android.sunshine.utilities;
+
+package com.example.android.weatho.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,20 +15,6 @@ import java.net.HttpURLConnection;
  */
 public final class OpenWeatherJsonUtils {
 
-    /**
-     * This method parses JSON from a web response and returns an array of Strings
-     * describing the weather over various days from the forecast.
-     * <p/>
-     * Later on, we'll be parsing the JSON into structured data within the
-     * getFullWeatherDataFromJson function, leveraging the data we have stored in the JSON. For
-     * now, we just convert the JSON into human-readable strings.
-     *
-     * @param forecastJsonStr JSON response from server
-     *
-     * @return Array of Strings describing weather data
-     *
-     * @throws JSONException If JSON data cannot be properly parsed
-     */
     public static String[] getSimpleWeatherStringsFromJson(Context context, String forecastJsonStr)
             throws JSONException {
 
@@ -66,7 +38,7 @@ public final class OpenWeatherJsonUtils {
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
 
-        /* Is there an error? */
+        
         if (forecastJson.has(OWM_MESSAGE_CODE)) {
             int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
 
@@ -87,8 +59,8 @@ public final class OpenWeatherJsonUtils {
         parsedWeatherData = new String[weatherArray.length()];
 
         long localDate = System.currentTimeMillis();
-        long utcDate = SunshineDateUtils.getUTCDateFromLocal(localDate);
-        long startDay = SunshineDateUtils.normalizeDate(utcDate);
+        long utcDate = WeathoDateUtils.getUTCDateFromLocal(localDate);
+        long startDay = WeathoDateUtils.normalizeDate(utcDate);
 
         for (int i = 0; i < weatherArray.length(); i++) {
             String date;
@@ -107,8 +79,8 @@ public final class OpenWeatherJsonUtils {
              * We ignore all the datetime values embedded in the JSON and assume that
              * the values are returned in-order by day (which is not guaranteed to be correct).
              */
-            dateTimeMillis = startDay + SunshineDateUtils.DAY_IN_MILLIS * i;
-            date = SunshineDateUtils.getFriendlyDateString(context, dateTimeMillis, false);
+            dateTimeMillis = startDay + WeathoDateUtils.DAY_IN_MILLIS * i;
+            date = WeathoDateUtils.getFriendlyDateString(context, dateTimeMillis, false);
 
             /*
              * Description is in a child array called "weather", which is 1 element long.
@@ -120,10 +92,6 @@ public final class OpenWeatherJsonUtils {
 
             /*
              * Temperatures are sent by Open Weather Map in a child object called "temp".
-             *
-             * Editor's Note: Try not to name variables "temp" when working with temperature.
-             * It confuses everybody. Temp could easily mean any number of things, including
-             * temperature, temporary and is just a bad variable name.
              */
             JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
             high = temperatureObject.getDouble(OWM_MAX);
@@ -136,16 +104,4 @@ public final class OpenWeatherJsonUtils {
         return parsedWeatherData;
     }
 
-    /**
-     * Parse the JSON and convert it into ContentValues that can be inserted into our database.
-     *
-     * @param context         An application context, such as a service or activity context.
-     * @param forecastJsonStr The JSON to parse into ContentValues.
-     *
-     * @return An array of ContentValues parsed from the JSON.
-     */
-    public static ContentValues[] getFullWeatherDataFromJson(Context context, String forecastJsonStr) {
-        /** This will be implemented in a future lesson **/
-        return null;
-    }
 }
