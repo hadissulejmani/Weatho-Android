@@ -1,4 +1,4 @@
-package com.example.android.sunshine;
+package com.example.android.weatho;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
+    private static final String FORECAST_SHARE_HASHTAG = " #WeathoApp";
 
     private String mForecast;
     private TextView mWeatherDisplay;
