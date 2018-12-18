@@ -1,34 +1,20 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.example.android.sunshine.utilities;
+
+package com.example.android.weatho.utilities;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.example.android.sunshine.R;
-import com.example.android.sunshine.data.SunshinePreferences;
+import com.example.android.weatho.R;
+import com.example.android.weatho.data.WeathoPreferences;
 
 /**
  * Contains useful utilities for a weather app, such as conversion between Celsius and Fahrenheit,
  * from kph to mph, and from degrees to NSEW.  It also contains the mapping of weather condition
  * codes in OpenWeatherMap to strings.  These strings are contained
  */
-public final class SunshineWeatherUtils {
+public final class WeathoWeatherUtils {
 
-    private static final String LOG_TAG = SunshineWeatherUtils.class.getSimpleName();
+    private static final String LOG_TAG = WeathoWeatherUtils.class.getSimpleName();
 
     /**
      * This method will convert a temperature from Celsius to Fahrenheit.
@@ -47,12 +33,6 @@ public final class SunshineWeatherUtils {
      * the app may need to display the temperature in Fahrenheit. This method will perform that
      * temperature conversion if necessary. It will also format the temperature so that no
      * decimal points show. Temperatures will be formatted to the following form: "21°C"
-     *
-     * @param context     Android Context to access preferences and resources
-     * @param temperature Temperature in degrees Celsius (°C)
-     *
-     * @return Formatted temperature String in the following form:
-     * "21°C"
      */
     public static String formatTemperature(Context context, double temperature) {
         int temperatureFormatResourceId = R.string.format_temperature_celsius;
@@ -66,16 +46,7 @@ public final class SunshineWeatherUtils {
         return String.format(context.getString(temperatureFormatResourceId), temperature);
     }
 
-    /**
-     * This method will format the temperatures to be displayed in the
-     * following form: "HIGH°C / LOW°C"
-     *
-     * @param context Android Context to access preferences and resources
-     * @param high    High temperature for a day in user's preferred units
-     * @param low     Low temperature for a day in user's preferred units
-     *
-     * @return String in the form: "HIGH°C / LOW°C"
-     */
+    
     public static String formatHighLows(Context context, double high, double low) {
         long roundedHigh = Math.round(high);
         long roundedLow = Math.round(low);
@@ -87,17 +58,6 @@ public final class SunshineWeatherUtils {
         return highLowStr;
     }
 
-    /**
-     * This method uses the wind direction in degrees to determine compass direction as a
-     * String. (eg NW) The method will return the wind String in the following form: "2 km/h SW"
-     *
-     * @param context   Android Context to access preferences and resources
-     * @param windSpeed Wind speed in kilometers / hour
-     * @param degrees   Degrees as measured on a compass, NOT temperature degrees!
-     *                  See https://www.mathsisfun.com/geometry/degrees.html
-     *
-     * @return Wind String in the following form: "2 km/h SW"
-     */
     public static String getFormattedWind(Context context, float windSpeed, float degrees) {
 
         int windFormat = R.string.format_wind_kmh;
@@ -132,16 +92,6 @@ public final class SunshineWeatherUtils {
         return String.format(context.getString(windFormat), windSpeed, direction);
     }
 
-    /**
-     * Helper method to provide the string according to the weather
-     * condition id returned by the OpenWeatherMap call.
-     *
-     * @param context   Android context
-     * @param weatherId from OpenWeatherMap API response
-     *                  http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
-     *
-     * @return String for the weather condition, null if no relation is found.
-     */
     public static String getStringForWeatherCondition(Context context, int weatherId) {
         int stringId;
         if (weatherId >= 200 && weatherId <= 232) {
@@ -311,14 +261,7 @@ public final class SunshineWeatherUtils {
         return context.getString(stringId);
     }
 
-    /**
-     * Helper method to provide the icon resource id according to the weather condition id returned
-     * by the OpenWeatherMap call.
-     *
-     * @param weatherId from OpenWeatherMap API response
-     *
-     * @return resource id for the corresponding icon. -1 if no relation is found.
-     */
+
     public static int getIconResourceForWeatherCondition(int weatherId) {
         /*
          * Based on weather code data found at:
@@ -350,14 +293,7 @@ public final class SunshineWeatherUtils {
         return -1;
     }
 
-    /**
-     * Helper method to provide the art resource id according to the weather condition id returned
-     * by the OpenWeatherMap call.
-     *
-     * @param weatherId from OpenWeatherMap API response
-     *
-     * @return resource id for the corresponding icon. -1 if no relation is found.
-     */
+
     public static int getArtResourceForWeatherCondition(int weatherId) {
         /*
          * Based on weather code data found at:
