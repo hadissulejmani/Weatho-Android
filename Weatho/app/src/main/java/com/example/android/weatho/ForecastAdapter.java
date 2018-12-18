@@ -1,19 +1,5 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.example.android.sunshine;
+
+package com.example.android.weatho;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -79,17 +65,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         }
     }
 
-    /**
-     * This gets called when each new ViewHolder is created. This happens when the RecyclerView
-     * is laid out. Enough ViewHolders will be created to fill the screen and allow for scrolling.
-     *
-     * @param viewGroup The ViewGroup that these ViewHolders are contained within.
-     * @param viewType  If your RecyclerView has more than one type of item (which ours doesn't) you
-     *                  can use this viewType integer to provide a different layout. See
-     *                  {@link android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)}
-     *                  for more details.
-     * @return A new ForecastAdapterViewHolder that holds the View for each list item
-     */
+
     @Override
     public ForecastAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
@@ -101,16 +77,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         return new ForecastAdapterViewHolder(view);
     }
 
-    /**
-     * OnBindViewHolder is called by the RecyclerView to display the data at the specified
-     * position. In this method, we update the contents of the ViewHolder to display the weather
-     * details for this particular position, using the "position" argument that is conveniently
-     * passed into us.
-     *
-     * @param forecastAdapterViewHolder The ViewHolder which should be updated to represent the
-     *                                  contents of the item at the given position in the data set.
-     * @param position                  The position of the item within the adapter's data set.
-     */
+
     @Override
     public void onBindViewHolder(ForecastAdapterViewHolder forecastAdapterViewHolder, int position) {
         String weatherForThisDay = mWeatherData[position];
@@ -127,17 +94,5 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     public int getItemCount() {
         if (null == mWeatherData) return 0;
         return mWeatherData.length;
-    }
-
-    /**
-     * This method is used to set the weather forecast on a ForecastAdapter if we've already
-     * created one. This is handy when we get new data from the web but don't want to create a
-     * new ForecastAdapter to display it.
-     *
-     * @param weatherData The new weather data to be displayed.
-     */
-    public void setWeatherData(String[] weatherData) {
-        mWeatherData = weatherData;
-        notifyDataSetChanged();
     }
 }
